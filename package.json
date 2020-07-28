@@ -1,0 +1,36 @@
+{
+  "name": "basepacketframeworkyii",
+  "version": "1.0.0",
+  "description": "<p align=\"center\">\r     <a href=\"https://github.com/yiisoft\" target=\"_blank\">\r         <img src=\"https://avatars0.githubusercontent.com/u/993323\" height=\"100px\">\r     </a>\r     <h1 align=\"center\">Yii 2 Basic Project Template</h1>\r     <br>\r </p>",
+  "main": "index.php",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Miller0/basePacketFrameworkYii.git"
+  },
+  "author": "Miller",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Miller0/basePacketFrameworkYii/issues"
+  },
+  "homepage": "https://github.com/Miller0/basePacketFrameworkYii#readme",
+  "devDependencies": {
+    "autoprefixer": "^9.8.5",
+    "cssnano": "^4.1.10",
+    "gulp": "^4.0.2",
+    "gulp-notify": "^3.2.0",
+    "gulp-postcss": "^8.0.0",
+    "gulp-sass": "^4.1.0",
+    "gulp-sourcemaps": "^2.6.5",
+    "node-sass": "^4.14.1"
+  },
+  "dependencies": {
+    "gulp-rename": "^2.0.0",
+    "rename": "^1.0.4"
+  }
+}

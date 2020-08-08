@@ -37,7 +37,6 @@ class CabinetController extends Controller
     {
 
         $model = new BotsForm();
-
         if ($model->load(Yii::$app->request->post()) )
         {
             if($model->create())
@@ -51,7 +50,7 @@ class CabinetController extends Controller
         return $this->render('addBot',
             [
                 'model' => $model,
-                'error' => $error,
+                'error' => $error ?? false,
 
             ]);
     }

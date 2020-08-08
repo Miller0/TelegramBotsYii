@@ -11,6 +11,11 @@ class SaveError
     const ERROR_CODES =
         [
             1 => 'unknown error',
+            100 => 'logBotsForm',
+            101 => 'logBotsForm',
+            1000 => 'BotsForm',
+            1001 => 'BotModel',
+            1002 => 'WebHook',
         ];
 
 

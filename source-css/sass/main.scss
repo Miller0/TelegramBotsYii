@@ -1,20 +1,28 @@
 html,
 body {
   height: 100%;
-  background-color: #000000;
-  color: silver;
+  background: url(https://s31405.pcdn.co/wp-content/uploads/bfi_thumb/threat-intelligence-3bepl52twk7gjingsxc74a.jpg) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  overflow: hidden;
+  color: white;
 }
 
 .wrap {
   min-height: 100%;
-  height: auto;
   margin: 0 auto -60px;
   padding: 0 0 60px;
 }
 
 .wrap > .container {
   padding: 70px 15px 20px;
+  background-color: #000000;
+  height: 100vh;
+  opacity: 0.9;
 }
+
 
 .footer {
   height: 60px;
@@ -116,3 +124,11 @@ a.desc:after {
   outline: none;
 }
 
+.navbar {
+  opacity: 0.9;
+}
+
+tr:nth-child(2n+1)
+{
+  color: #0f0f0f;
+}

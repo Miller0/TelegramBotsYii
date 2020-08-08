@@ -42,5 +42,5 @@ function watch() {
 // Expose the task by exporting it
 // This allows you to run it from the commandline using
 // $ gulp style
-exports.watch  = watch;
+exports.default  = watch;
 exports.style  = style;

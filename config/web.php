@@ -2,6 +2,7 @@
 
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
+$urlRules = require __DIR__ . '/urlRules.php';
 
 $config = [
     'id' => 'basic',
@@ -48,8 +49,7 @@ $config = [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-            'rules' => [
-            ],
+            'rules' => $urlRules,
         ],
 
         'authManager' => [
@@ -70,10 +70,9 @@ $config = [
     'params' => $params,
 
     'modules' => [
-        //'test' => [
-        //'class' => 'app\modules\test\Module',
-        // ... другие настройки модуля ...
-        //],
+        'telegram' => [
+            'class' => 'app\modules\telegram\Module',
+        ],
     ],
 ];
 

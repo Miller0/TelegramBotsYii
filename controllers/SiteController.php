@@ -72,6 +72,8 @@ class SiteController extends Controller
         try
         {
             $i =  1/0;
+
+
         }
         catch (\Exception $e)
         {

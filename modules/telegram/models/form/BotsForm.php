@@ -13,6 +13,10 @@ use Yii;
 use yii\base\Model;
 use yii\helpers\Url;
 
+/**
+ * Class BotsForm
+ * @package app\modules\telegram\models\form
+ */
 class BotsForm extends Model
 {
 

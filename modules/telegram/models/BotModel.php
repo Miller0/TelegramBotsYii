@@ -34,6 +34,10 @@ class BotModel extends Model
     }
 
 
+    /**
+     * @param $id
+     * @return bool
+     */
     public function setBot($id)
     {
 
@@ -49,20 +53,6 @@ class BotModel extends Model
 
             $this->id = $id;
             $this->telegramHandle = $telegram;
-
-            try
-            {
-                $model = new LogTelegramWebHook();
-                $model->text = $telegram->getCustomInput() ?? '';
-                if ($model->validate())
-                {
-                    $model->save();
-                }
-            }
-            catch (\Exception $e)
-            {
-                SaveError::save(1002, $e->getMessage(), 'saveLog');
-            }
 
             return true;
 
@@ -110,7 +100,7 @@ class BotModel extends Model
                     $messageModel->userName = $chat->getUsername() ?? '';
                     $messageModel->firstName = $chat->getFirstName() ?? '';
                     $messageModel->lastName = $chat->getLastName() ?? '';
-                    $messageModel->userIdTelegram =$chat->getId() ?? '';
+                    $messageModel->userIdTelegram = $chat->getId() ?? '';
                 }
 
                 $this->message = $messageModel;

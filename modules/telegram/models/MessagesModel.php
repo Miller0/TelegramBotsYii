@@ -8,6 +8,7 @@ use app\models\generated\Chats;
 use app\models\generated\Messages;
 use app\models\generated\TelegramUser;
 use app\modules\telegram\models\search\TelegramUserSearch;
+use app\utils\SaveError;
 use yii\base\Model;
 
 class MessagesModel extends Model
@@ -29,31 +30,39 @@ class MessagesModel extends Model
 
     public function create()
     {
-        if($this->userIdTelegram)
-        $modelChat = Chats::findOne(['telegramUserId' => TelegramUserSearch::searchById($this->userIdTelegram)['id'],'botId' => $this->botId]);
-
-        if (empty($modelChat))
+        try
         {
-            $modelChat = $this->createChat();
+            if ($this->userIdTelegram)
+                $modelChat = Chats::findOne(['telegramUserId' => TelegramUserSearch::searchById($this->userIdTelegram)['id'], 'botId' => $this->botId]);
+
             if (empty($modelChat))
-                return false;
+            {
+                $modelChat = $this->createChat();
+                if (empty($modelChat))
+                    return false;
+            }
+            else
+            {
+                $modelChat->update = date('Y-m-d H:i:s');
+                $modelChat->save();
+            }
+
+            $modelMessage = new Messages();
+            $modelMessage->text = $this->text;
+            $modelMessage->chatId = $modelChat->id;
+            $modelMessage->senderId = $modelChat->telegramUserId;
+            $modelMessage->senderType = $this->senderType;
+            $modelMessage->status = self::MESSAGE_STATUS['send'];
+
+            if ($modelMessage->validate())
+                if ($modelMessage->save())
+                    return true;
+
         }
-        else
+        catch (\Exception $e)
         {
-            $modelChat->update = date('Y-m-d H:i:s');
-            $modelChat->save();
+            SaveError::save(1003,$e->getMessage(),__FUNCTION__	);
         }
-
-        $modelMessage = new Messages();
-        $modelMessage->text = $this->text;
-        $modelMessage->chatId = $modelChat->id;
-        $modelMessage->senderId = $modelChat->telegramUserId;
-        $modelMessage->senderType = $this->senderType;
-        $modelMessage->status = self::MESSAGE_STATUS['send'];
-
-        if($modelMessage->validate())
-            if($modelMessage->save())
-                return true;
 
         return false;
 
@@ -62,7 +71,6 @@ class MessagesModel extends Model
 
     public function createChat()
     {
-
         if ($modelUserTelegram = $this->createUserTelegram())
         {
             $modelChat = new Chats();

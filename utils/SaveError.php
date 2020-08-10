@@ -16,6 +16,7 @@ class SaveError
             1000 => 'BotsForm',
             1001 => 'BotModel',
             1002 => 'WebHook',
+            1003 => 'MessagesModel',
         ];
 
 

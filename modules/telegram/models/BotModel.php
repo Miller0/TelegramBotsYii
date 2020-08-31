@@ -3,34 +3,36 @@
 namespace app\modules\telegram\models;
 
 use app\models\generated\Bots;
-use app\models\generated\LogTelegramWebHook;
+use app\models\generated\Chats;
+use app\models\generated\Messages;
 use app\utils\SaveError;
 use Longman\TelegramBot\Telegram;
 use Throwable;
-use yii\base\Model;
 
-class BotModel extends Model
+
+class BotModel
 {
 
     const BOT_STATUS = array('error' => 'error', 'paused' => 'paused', 'working' => 'working', 'finished' => 'finished');
 
     public $id;
-    public $botId;
+    public $telegramBotId;
     public $botName;
     public $message;
 
+    private $telegram;
     private $telegramHandle;
 
-    function __construct($id)
-    {
-        parent::__construct();
-        if ($this->setBot($id))
-        {
-            $this->setBotId();
-            $this->setBotName();
-            $this->setMessage();
 
-        }
+    /**
+     * BotModel constructor.
+     * @param $id
+     * @param bool $update
+     */
+    function __construct($id, $getUpdate = false)
+    {
+        $this->setBot($id);
+        $getUpdate ? $this->getUpdate() : true;
     }
 
 
@@ -38,24 +40,21 @@ class BotModel extends Model
      * @param $id
      * @return bool
      */
-    public function setBot($id)
+    private function setBot($id)
     {
 
-        $model = Bots::findOne(['id' => $id]);
+        $bot = Bots::findOne(['id' => $id]);
 
-        if (empty($model))
+        if (empty($bot))
             return false;
 
         try
         {
-            $telegram = new Telegram($model['token'], $model['name']);
-            $telegram->handle();
+            $telegram = new Telegram($bot['token'], $bot['name']);
 
             $this->id = $id;
-            $this->telegramHandle = $telegram;
-
+            $this->telegram = $telegram;
             return true;
-
         }
         catch (Throwable $e)
         {
@@ -67,33 +66,43 @@ class BotModel extends Model
     }
 
 
-    public function setBotId()
+    private function setBotId()
     {
-        $this->botId = $this->telegramHandle->getBotId();
+        if (empty($this->telegramHandle))
+            $this->setUpdate();
+
+        $this->telegramBotId = $this->telegramHandle->getBotId();
     }
 
 
-    public function setBotName()
+    private function setBotName()
     {
+        if (empty($this->telegramHandle))
+            $this->setUpdate();
+
         $this->botName = $this->telegramHandle->getBotUsername();
     }
 
 
-    public function setMessage()
+    private function setMessageHandle()
     {
         try
         {
+            if (empty($this->telegramHandle))
+                $this->setUpdate();
+
             $callbackquery = $this->telegramHandle->getCommandObject('callbackquery');
 
             if ($message = $callbackquery->getUpdate()->getMessage() ?? $callbackquery->getUpdate()->getChannelPost())
             {
-                $messageModel = new MessagesModel();
+                $messageModel = new BotMessagesModel();
 
                 $messageModel->messageIdTelegram = $message->getMessageId() ?? '';
                 $messageModel->text = $message->getText() ?? '';
-                $messageModel->type = $message->getFrom() ? MessagesModel::MESSAGE_TYPE['private'] : MessagesModel::MESSAGE_TYPE['channel'];
+                $messageModel->type = $message->getFrom() ? BotMessagesModel::MESSAGE_TYPE['private'] : BotMessagesModel::MESSAGE_TYPE['channel'];
                 $messageModel->botId = $this->id;
-                $messageModel->senderType = $message->getViaBot() ? MessagesModel::SENDER_TYPE['bot'] : MessagesModel::SENDER_TYPE['telegramUser'];
+                $messageModel->senderType = $message->getViaBot() ? BotMessagesModel::SENDER_TYPE['bot'] : BotMessagesModel::SENDER_TYPE['telegramUser'];
+                $messageModel->status = BotMessagesModel::MESSAGE_STATUS['send'];
 
                 if ($chat = $message->getChat())
                 {
@@ -104,22 +113,69 @@ class BotModel extends Model
                 }
 
                 $this->message = $messageModel;
-
             }
-
         }
         catch (Throwable $e)
         {
-            $this->message = new MessagesModel();
             SaveError::save(1001, $e->getMessage(), 'setMessage');
+            $this->message = new BotMessagesModel();
         }
-
     }
 
 
-    public function getMessages()
+    public function getUpdate()
     {
-        return $this->message;
+        try
+        {
+            $telegram = $this->telegram;
+            $telegram->handle();
+            $this->telegramHandle = $telegram;
+            $this->setBotName();
+            $this->setBotId();
+            $this->setMessageHandle();
+        }
+        catch (\Exception $e)
+        {
+            SaveError::save(1001, $e->getMessage(), 'getUpdate');
+        }
+    }
+
+
+    public function saveMessage()
+    {
+        if (empty($this->message))
+            return false;
+
+        return $this->message->saveMessage();
+    }
+
+
+    public function sendMessage()
+    {
+        if (empty($this->id))
+            return false;
+
+        if (empty($this->message))
+            return false;
+
+        $chats = Chats::find()->select(['id'])->where(['deleted' => 0, 'botId' => $this->id])->asArray()->all();
+        if (empty($chat))
+            return false;
+
+        foreach ($chats as $chat)
+        {
+            $messagesArr = Messages::find()->where(['deleted' => 0, 'chatId' => $chat['id'], 'status' => BotMessagesModel::MESSAGE_STATUS['unknown']])->asArray()->all();
+
+            foreach ($messagesArr as $messageArr)
+            {
+                $message = new BotMessagesModel();
+                $message->text = $messageArr['text'];
+            }
+
+
+        }
+
+        return false;
     }
 
 }

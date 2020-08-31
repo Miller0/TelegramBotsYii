@@ -32,7 +32,7 @@ class Errors extends \yii\db\ActiveRecord
         return [
             [['created'], 'safe'],
             [['userId', 'code'], 'integer'],
-            [['text', 'exception'], 'string', 'max' => 32],
+            [['text', 'exception'], 'string', 'max' => 500],
         ];
     }
 

@@ -5,23 +5,18 @@ namespace app\modules\telegram\models\search;
 
 
 use app\models\generated\TelegramUser;
-use yii\base\Model;
 
-class TelegramUserSearch extends Model
+class TelegramUserSearch
 {
 
-
-    public static function searchById($telegramId)
+    /**
+     * @param $id
+     * @return array|\yii\db\ActiveRecord|null
+     */
+    public static function searchByTelegramId($id)
     {
-        if($telegramId)
-        {
-            $telegramUser = TelegramUser::find()->where(['telegramId' => $telegramId])->asArray()->one();
-
+            $telegramUser = TelegramUser::find()->where(['telegramId' => $id])->asArray()->one();
             return $telegramUser;
-        }
-
-        return [] ;
-
     }
 
 }

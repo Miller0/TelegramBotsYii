@@ -13,7 +13,8 @@ use Yii;
  * @property int $senderId
  * @property string $senderType
  * @property string $create
- * @property string|null $status
+ * @property string $status
+ * @property int|null $deleted
  */
 class Messages extends \yii\db\ActiveRecord
 {
@@ -32,7 +33,7 @@ class Messages extends \yii\db\ActiveRecord
     {
         return [
             [['text', 'senderId', 'senderType'], 'required'],
-            [['chatId', 'senderId'], 'integer'],
+            [['chatId', 'senderId', 'deleted'], 'integer'],
             [['senderType', 'status'], 'string'],
             [['create'], 'safe'],
             [['text'], 'string', 'max' => 5000],
@@ -52,6 +53,7 @@ class Messages extends \yii\db\ActiveRecord
             'senderType' => 'Sender Type',
             'create' => 'Create',
             'status' => 'Status',
+            'deleted' => 'Deleted',
         ];
     }
 }

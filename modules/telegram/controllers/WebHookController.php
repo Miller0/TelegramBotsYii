@@ -26,15 +26,13 @@ class WebHookController extends Controller
         try
         {
             $key = Yii::$app->request->get('key');
-
-            if(strlen($key) > 50)
+            if(strlen($key) != 31)
                 return false;
 
             if ($modelBots = Bots::find()->select(['id','name'])->where(['webHookKey' => $key, 'deleted' => 0])->asArray()->one())
             {
-                $modelBot = new BotModel($modelBots['id']);
-
-                if (!$modelBot->message->create())
+                $modelBot = new BotModel($modelBots['id'],true);
+                if (!$modelBot->saveMessage())
                 {
                     new LogBotsForm('error save message', $modelBots['id']);
                 }

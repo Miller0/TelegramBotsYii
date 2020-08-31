@@ -16,7 +16,7 @@ class SaveError
             1000 => 'BotsForm',
             1001 => 'BotModel',
             1002 => 'WebHook',
-            1003 => 'MessagesModel',
+            1003 => 'BotMessagesModel',
         ];
 
 
@@ -28,7 +28,7 @@ class SaveError
             if (empty($code))
                 return false;
 
-            if (!isset($codes[$code]))
+            if (!isset(self::ERROR_CODES[$code]))
                 $code = 1;
 
             $error = new Errors();
@@ -37,7 +37,7 @@ class SaveError
             $error->text = self::ERROR_CODES[$code].'. '.$text;
             $error->exception = $exception;
 
-            if($error->save())
+            if($a =$error->save())
                return true;
 
             $error = new Errors();

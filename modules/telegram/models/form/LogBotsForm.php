@@ -36,8 +36,6 @@ class LogBotsForm extends Model
 
     public function create()
     {
-        try
-        {
             $model = new LogBots();
 
             if ($this->validate())
@@ -52,14 +50,6 @@ class LogBotsForm extends Model
             }
 
             return $model->save();
-        }
-        catch (\Exception $e)
-        {
-            SaveError::save(101, $e->getMessage());
-        }
-
-        return false;
-
     }
 
 

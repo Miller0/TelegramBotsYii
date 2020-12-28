@@ -2,9 +2,9 @@
 
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=195.54.163.64;dbname=spacebot',
-    'username' => 'admin_spacebot',
-    'password' => 'PopELTTomPsDrltalfW4',
+    'dsn' => 'mysql:host=192.168.100.17;dbname=template',
+    'username' => 'test3',
+    'password' => 'test3',
     'charset' => 'utf8',
 
     // Schema cache options (for production environment)

@@ -11,7 +11,7 @@ use Yii;
  * @property string $name
  * @property int $botId
  * @property int $telegramUserId
- * @property string $create
+ * @property string $created
  * @property string $update
  * @property int|null $deleted
  */
@@ -33,7 +33,7 @@ class Chats extends \yii\db\ActiveRecord
         return [
             [['name', 'botId'], 'required'],
             [['botId', 'telegramUserId', 'deleted'], 'integer'],
-            [['create', 'update'], 'safe'],
+            [['created', 'update'], 'safe'],
             [['name'], 'string', 'max' => 50],
         ];
     }
@@ -48,7 +48,7 @@ class Chats extends \yii\db\ActiveRecord
             'name' => 'Name',
             'botId' => 'Bot ID',
             'telegramUserId' => 'Telegram User ID',
-            'create' => 'Create',
+            'created' => 'Create',
             'update' => 'Update',
             'deleted' => 'Deleted',
         ];

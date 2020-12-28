@@ -12,7 +12,7 @@ use Yii;
  * @property string|null $name
  * @property string $token
  * @property string|null $webHookKey
- * @property string|null $create
+ * @property string|null $created
  * @property string|null $status
  * @property int|null $deleted
  */
@@ -34,7 +34,7 @@ class Bots extends \yii\db\ActiveRecord
         return [
             [['userId', 'token'], 'required'],
             [['userId', 'deleted'], 'integer'],
-            [['create'], 'safe'],
+            [['created'], 'safe'],
             [['status'], 'string'],
             [['name', 'token', 'webHookKey'], 'string', 'max' => 50],
             [['webHookKey', 'token'], 'unique', 'targetAttribute' => ['webHookKey', 'token']],
@@ -52,7 +52,7 @@ class Bots extends \yii\db\ActiveRecord
             'name' => 'Name',
             'token' => 'Token',
             'webHookKey' => 'Web Hook Key',
-            'create' => 'Create',
+            'created' => 'Create',
             'status' => 'Status',
             'deleted' => 'Deleted',
         ];
